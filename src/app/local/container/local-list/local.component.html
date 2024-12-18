@@ -4,18 +4,24 @@
 <main class="shadow-1 border-round-md my-5 p-3">
 
   <div class="flex justify-content-between align-items-center gap-2">
-    <h1 class="text-xl">Lista de Locais</h1>
+    <p-toolbar class="w-full p-0 mt-3">
+      <div class=" p-toolbar-group-left">
+        <h1 class="text-xl">Lista de Locais</h1>
+      </div>
 
-    <p-button
-      type="button"
-      label="Novo Local"
-      icon="pi pi-plus"
-      severity="success"
-      (click)="route.navigateByUrl('/local/novo')"
-    />
+      <div class=" p-toolbar-group-right">
+        <p-button
+          type="button"
+          label="Novo Local"
+          icon="pi pi-plus"
+          severity="success"
+          (click)="route.navigateByUrl('/local/novo')"
+        />
+      </div>
+    </p-toolbar>
   </div>
 
-  <div class="card">
+  <div class="card mt-3">
     <p-table
       [value]="locais"
       [paginator]="true"

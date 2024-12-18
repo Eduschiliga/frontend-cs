@@ -12,18 +12,20 @@ import {buildMedicao, Medicao} from '../../../medicao/model/medicao';
 import {CalendarModule} from 'primeng/calendar';
 import {FieldsetModule} from 'primeng/fieldset';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ToolbarModule} from "primeng/toolbar";
 
 @Component({
   selector: 'app-local-formulario',
-  imports: [
-    FormsModule,
-    InputTextModule,
-    Button,
-    ToastModule,
-    CalendarModule,
-    FieldsetModule,
-    ConfirmDialogModule,
-  ],
+    imports: [
+        FormsModule,
+        InputTextModule,
+        Button,
+        ToastModule,
+        CalendarModule,
+        FieldsetModule,
+        ConfirmDialogModule,
+        ToolbarModule,
+    ],
   templateUrl: './local-formulario.component.html',
   styleUrl: './local-formulario.component.css',
   standalone: true,

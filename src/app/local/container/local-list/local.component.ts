@@ -8,6 +8,7 @@ import {Router} from '@angular/router';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ToastModule} from 'primeng/toast';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {ToolbarModule} from 'primeng/toolbar';
 
 @Component({
   selector: 'app-local',
@@ -15,7 +16,8 @@ import {ConfirmationService, MessageService} from 'primeng/api';
     TableModule,
     Button,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    ToolbarModule
   ],
   providers: [
     MessageService,
