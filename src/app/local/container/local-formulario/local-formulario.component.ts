@@ -13,6 +13,9 @@ import {CalendarModule} from 'primeng/calendar';
 import {FieldsetModule} from 'primeng/fieldset';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ToolbarModule} from "primeng/toolbar";
+import {MenuComponent} from "../../../menu/menu.component";
+import {buildUsuarioAuth, UsuarioAuth} from '../../../auth/model/usuario-auth';
+import {AuthStateService} from '../../../auth/service/state/auth.state.service';
 
 @Component({
   selector: 'app-local-formulario',
@@ -25,6 +28,7 @@ import {ToolbarModule} from "primeng/toolbar";
         FieldsetModule,
         ConfirmDialogModule,
         ToolbarModule,
+        MenuComponent,
     ],
   templateUrl: './local-formulario.component.html',
   styleUrl: './local-formulario.component.css',
@@ -36,6 +40,7 @@ export class LocalFormularioComponent implements OnInit {
   protected form: Local;
   protected readonly window = window;
   protected rotaAtual = '';
+  protected usuario: UsuarioAuth = buildUsuarioAuth();
 
   constructor(
     private localApi: LocalApiService,
@@ -43,15 +48,18 @@ export class LocalFormularioComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private confirmationService: ConfirmationService,
+    private auth: AuthStateService
   ) {
     this.rotaAtual = this.route.snapshot.url[0].path;
     this.form = this.route.snapshot.data['local'];
+    this.auth.usuario.subscribe(usuario => this.usuario = usuario);
   }
 
   salvar() {
     if (this.form.nome != '') {
       if (this.rotaAtual == 'novo') {
-        this.localApi.salvar(this.form, 'eduardo@gmail.com').subscribe(
+        // TODO: ALTERAR O EMAIL
+        this.localApi.salvar(this.form, this.usuario.email).subscribe(
           {
             next: (local: Local) => {
               this.messageService.add({severity: 'success', summary: 'Sucesso', detail: 'Local salvo com sucesso'});

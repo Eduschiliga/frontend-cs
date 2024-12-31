@@ -9,16 +9,18 @@ import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ToastModule} from 'primeng/toast';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ToolbarModule} from 'primeng/toolbar';
+import {MenuComponent} from "../../../menu/menu.component";
 
 @Component({
   selector: 'app-local',
-  imports: [
-    TableModule,
-    Button,
-    ConfirmDialogModule,
-    ToastModule,
-    ToolbarModule
-  ],
+    imports: [
+        TableModule,
+        Button,
+        ConfirmDialogModule,
+        ToastModule,
+        ToolbarModule,
+        MenuComponent
+    ],
   providers: [
     MessageService,
     ConfirmationService

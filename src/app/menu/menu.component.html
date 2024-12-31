@@ -1,0 +1,26 @@
+<nav class="shadow w-full">
+  <div class="flex gap-3 justify-content-between p-menu p-menu-vertical p-menu-list list-none w-full p-2">
+    <div class="flex gap-2 justify-content-center align-content-center align-items-center">
+
+      <p-avatar [label]="usuario.nomeCompleto[0].toUpperCase()" styleClass="mr-2" size="large"
+                [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }" shape="circle"/>
+
+      <div class="flex flex-column gap-1 justify-content-center align-content-center align-items-start">
+        <span class="font-bold">{{ usuario.login }}</span>
+        <span class="font-bold">{{ usuario.email }}</span>
+      </div>
+
+
+    </div>
+
+    <div class="flex gap-3">
+      <p-button raised [routerLink]="['/home']" label="Home" class="p-button-text"></p-button>
+      <p-button raised [routerLink]="['/local']" label="Local" class="p-button-text"></p-button>
+    </div>
+
+
+    <p-button severity="danger" [outlined]="true" raised (onClick)="logout()" label="Desconectar"
+              class="p-button-text"></p-button>
+
+  </div>
+</nav>

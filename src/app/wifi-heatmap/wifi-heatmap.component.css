@@ -1,0 +1,18 @@
+.app-container {
+  text-align: center;
+}
+
+select {
+  padding: 5px;
+  font-size: 14px;
+}
+
+.canvas-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+canvas {
+  cursor: crosshair;
+}

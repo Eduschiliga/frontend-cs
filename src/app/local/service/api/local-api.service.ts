@@ -9,7 +9,7 @@ import {Local} from '../../model/local';
 export class LocalApiService {
   private readonly URL = 'http://localhost:8080/api/local';
   private readonly URL_MEDICAO = 'http://localhost:8080/api/medicao';
-  private token = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczNDQ3NTAwNSwiZXhwIjoxNzM0NTYxNDA1fQ.bhsk4GprLRgU1oQiHJjz9T2Nu0X9Zxgg5VyuD2ghoLLulrhisaCCIc68wf33ZzAQ7H8b_NqiNhB4GIKtf_k5nA`;
+  private token: string = localStorage.getItem('token') != null ? <string>localStorage.getItem('token') : '';
 
   constructor(
     private http: HttpClient,

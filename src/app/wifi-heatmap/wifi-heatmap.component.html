@@ -1,0 +1,36 @@
+<div class="app-container p-d-flex p-flex-column p-ai-center p-mt-3">
+  <div class="p-mb-3">
+    <h4>Escolha o cômodo para adicionar:</h4>
+    <select [(ngModel)]="selectedRoom" [disabled]="availableRooms.length === 0">
+      <option *ngFor="let room of availableRooms" [value]="room">{{ room }}</option>
+    </select>
+  </div>
+
+  <div class="p-d-flex p-jc-center p-mb-3">
+    <button
+      pButton
+      label="Inserir Cômodo"
+      class="p-button-primary p-mr-2"
+      [disabled]="!selectedRoom"
+      (click)="setMode('addRoom')"
+    ></button>
+    <button
+      pButton
+      label="Inserir Wi-Fi"
+      class="p-button-success"
+      (click)="setMode('addWifi')"
+    ></button>
+  </div>
+
+  <div class="canvas-container">
+    <canvas
+      #canvas
+      [width]="canvasWidth"
+      [height]="canvasHeight"
+      style="border: 1px solid #ccc;"
+      (mousedown)="startAction($event)"
+      (mouseup)="endAction($event)"
+      (mousemove)="draw($event)"
+    ></canvas>
+  </div>
+</div>

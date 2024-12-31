@@ -7,13 +7,15 @@ import {CardModule} from 'primeng/card';
 import {ChartOptions} from 'chart.js';
 import {Medicao} from '../medicao/model/medicao';
 import {ToolbarModule} from 'primeng/toolbar';
+import {MenuComponent} from '../menu/menu.component';
 
 @Component({
   selector: 'app-home',
   imports: [
     ChartModule,
     CardModule,
-    ToolbarModule
+    ToolbarModule,
+    MenuComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
@@ -37,8 +39,7 @@ export class HomeComponent implements OnInit {
   protected chartDataNivelSinal5ghz: any = null;
   protected chartDataInterferencia: any = null;
 
-  chartData: any; // Dados do gráfico
-  chartOptions: ChartOptions = {}; // Configurações do gráfico
+  chartOptions: ChartOptions = {};
 
   constructor(
     private localApi: LocalApiService,
@@ -89,7 +90,6 @@ export class HomeComponent implements OnInit {
   }
 
   configureCharts() {
-    // Coleta todas as datas (labels) únicas de todos os locais
     const labelsSet = new Set<string>();
     this.locais.forEach(local => {
       local.medicoes.forEach(medicao => {
@@ -100,41 +100,36 @@ export class HomeComponent implements OnInit {
     });
 
     const labels = Array.from(labelsSet).sort((a, b) => {
-      const date1 = a.split('/').reverse().join('-'); // Reverte para "aaaa-mm-dd"
+      const date1 = a.split('/').reverse().join('-');
       const date2 = b.split('/').reverse().join('-');
-      return new Date(date1).getTime() - new Date(date2).getTime(); // Compara timestamps
+      return new Date(date1).getTime() - new Date(date2).getTime();
     });
 
-    // Configurações para os diferentes gráficos
     this.chartDataVelocidade5ghz = this.createChartData(labels, 'velocidade_5ghz');
     this.chartDataVelocidade24ghz = this.createChartData(labels, 'velocidade_24ghz');
     this.chartDataNivelSinal5ghz = this.createChartData(labels, 'nivel_sinal_5ghz');
     this.chartDataInterferencia = this.createChartData(labels, 'interferencia');
 
-    // Configurações comuns para os 4 gráficos
     this.chartOptions = {
       responsive: true,
       plugins: {
         legend: {
-          position: 'top' // Posiciona a legenda no topo
+          position: 'top'
         }
       }
     };
   }
 
-  /**
-   * Gera os dados do gráfico com base na propriedade de Medicao fornecida
-   */
   createChartData(labels: string[], property: keyof Medicao) {
     const datasets = this.locais.map(local => ({
-      label: local.nome, // Nome do Local
+      label: local.nome,
       data: labels.map(label => {
         const matchingMedicao = local.medicoes.find(medicao => {
           const medicaoDate = new Date(medicao.data);
           const formattedDate = `${medicaoDate.getDate()}/${medicaoDate.getMonth() + 1}/${medicaoDate.getFullYear()}`;
           return formattedDate === label;
         });
-        return matchingMedicao ? matchingMedicao[property] : null; // Retorna o valor da propriedade (ou null se não houver)
+        return matchingMedicao ? matchingMedicao[property] : null;
       }),
       backgroundColor: this.getRandomColor(),
       borderColor: this.getRandomColor(),
@@ -147,9 +142,6 @@ export class HomeComponent implements OnInit {
     };
   }
 
-  /**
-   * Gera uma cor aleatória para os datasets
-   */
   getRandomColor(): string {
     const letters = '0123456789ABCDEF';
     let color = '#';

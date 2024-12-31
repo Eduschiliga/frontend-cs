@@ -1,0 +1,60 @@
+<p-toast></p-toast>
+
+<main class="shadow-1 border-round-md my-5 p-3 gap-5 flex flex-column justify-content-center align-content-center w-30rem">
+  <form class="flex flex-column gap-3 mt-3">
+    <div class="flex flex-column gap-2">
+      <label for="email" class="required">E-mail</label>
+      <input
+        pInputText
+        id="email"
+        [(ngModel)]="form.email"
+        name="email"
+        type="email"
+        maxlength="255"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="nomeCompleto" class="required">Nome Completo</label>
+      <input
+        pInputText
+        id="nomeCompleto"
+        [(ngModel)]="form.nomeCompleto"
+        name="nomeCompleto"
+        maxlength="255"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="login" class="required">Login</label>
+      <input
+        pInputText
+        id="login"
+        [(ngModel)]="form.login"
+        name="login"
+        maxlength="255"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="senha" class="required">Senha</label>
+      <input
+        pInputText
+        id="senha"
+        [(ngModel)]="form.senha"
+        name="senha"
+        maxlength="255"
+        type="password"
+      />
+    </div>
+  </form>
+
+  <p-button
+    type="submit"
+    label="Cadastrar"
+    severity="success"
+    (click)="login()"
+  />
+
+  <a class="m-0" [routerLink]="['/auth/login']">Realize o seu login!</a>
+</main>
