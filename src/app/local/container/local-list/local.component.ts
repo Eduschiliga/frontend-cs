@@ -10,6 +10,8 @@ import {ToastModule} from 'primeng/toast';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ToolbarModule} from 'primeng/toolbar';
 import {MenuComponent} from "../../../menu/menu.component";
+import {buildUsuarioAuth, UsuarioAuth} from '../../../auth/model/usuario-auth';
+import {AuthStateService} from '../../../auth/service/state/auth.state.service';
 
 @Component({
   selector: 'app-local',
@@ -29,15 +31,20 @@ import {MenuComponent} from "../../../menu/menu.component";
   styleUrl: './local.component.css'
 })
 export class LocalComponent implements OnInit {
+  protected usuario: UsuarioAuth = buildUsuarioAuth();
   protected locais: Local[] = [];
+
 
   constructor(
     private localApi: LocalApiService,
     private localState: LocalStateService,
     protected route: Router,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private auth: AuthStateService
   ) {
+    this.auth.usuario.subscribe(usuario => this.usuario = usuario);
+
     this.localState.local$.subscribe(
       {
         next: (local: Local[]) => {
@@ -48,7 +55,7 @@ export class LocalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.localApi.buscarTodosPorUsuario(1).subscribe(
+    this.localApi.buscarTodosPorUsuario(this.usuario.usuarioId).subscribe(
       {
         next: (local: Local[]) => {
           this.localState.setLocalList(local);
@@ -58,12 +65,12 @@ export class LocalComponent implements OnInit {
   }
 
   editar(local: Local) {
-    this.route.navigate(['/local/editar/', local.id]);
+    this.route.navigate(['/local/editar/', local.localId]);
   }
 
   excluir(local: Local) {
     this.confirmationService.confirm({
-      message: 'Tem certeza que deseja excluir este local?',
+      message: 'Tem certeza que deseja excluir este local? ' + "#" + local.localId + " - " + local.nome,
       header: 'Confirmação para Deletar',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: "p-button-danger p-button-text",
@@ -72,8 +79,8 @@ export class LocalComponent implements OnInit {
       rejectIcon: "none",
 
       accept: () => {
-        if (local.id) {
-          this.localApi.deletar(local.id).subscribe(
+        if (local.localId) {
+          this.localApi.deletar(local.localId).subscribe(
             {
               next: () => {
                 this.messageService.add({
@@ -83,7 +90,7 @@ export class LocalComponent implements OnInit {
                   life: 3000
                 });
 
-                let temp = this.locais.filter(l => l.id != local.id);
+                let temp = this.locais.filter(l => l.localId != local.localId);
                 this.localState.setLocalList(temp);
               },
               error: (error: any) => {

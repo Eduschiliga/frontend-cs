@@ -1,74 +1,86 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+// wifi-heatmap.component.ts
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgForOf } from '@angular/common';
 import {ButtonDirective} from 'primeng/button';
+import {LocalApiService} from '../local/service/api/local-api.service';
+import {Local} from '../local/model/local';
+import {buildUsuarioAuth, UsuarioAuth} from '../auth/model/usuario-auth';
+import {AuthStateService} from '../auth/service/state/auth.state.service';
+import {MenuComponent} from '../menu/menu.component';
+import {PanelModule} from 'primeng/panel';
+import {CardModule} from 'primeng/card';
+
+interface Room {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-wifi-heatmap',
   templateUrl: './wifi-heatmap.component.html',
   styleUrls: ['./wifi-heatmap.component.css'],
-  imports: [
-    FormsModule,
-    NgForOf,
-    ButtonDirective
-  ]
+  imports: [FormsModule, NgForOf, ButtonDirective, MenuComponent, PanelModule, CardModule],
+  standalone: true
 })
 export class WifiHeatmapComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   ctx!: CanvasRenderingContext2D;
 
-  // Configurações do Canvas
-  canvasWidth: number = 800;
-  canvasHeight: number = 500;
+  protected usuario: UsuarioAuth = buildUsuarioAuth();
 
-  // Estado de controle
-  mode: 'addRoom' | 'addWifi' | null = null; // Modo atual
-  isDrawing: boolean = false;
+  canvasWidth = 800;
+  canvasHeight = 500;
 
-  // Lista de cômodos disponíveis e seleção
-  availableRooms: string[] = ['sala', 'cozinha', 'banheiro'];
-  selectedRoom: string | null = null; // Cômodo atualmente selecionado
+  mode: 'addRoom' | 'addWifi' | null = null;
+  isDrawing = false;
+  availableRooms: string[] = [];
+  selectedRoom: string | null = null;
+  rooms: Room[] = [];
+  wifiLocation: { x: number; y: number } | null = null;
 
-  rooms: Array<{
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    name: string;
-  }> = []; // Cômodos desenhados
+  tempStartX = 0;
+  tempStartY = 0;
 
-  wifiLocation: { x: number; y: number } | null = null; // Localização do roteador
+  constructor(
+    private localApi: LocalApiService,
+    private auth: AuthStateService
 
-  tempStartX: number = 0; // Coordenadas temporárias para o início do desenho
-  tempStartY: number = 0;
+  ) {
+    this.auth.usuario.subscribe(usuario => this.usuario = usuario);
 
-  ngOnInit(): void {
-    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    this.ctx = canvasEl.getContext('2d')!;
-    this.renderCanvas(); // Renderização inicial
+    this.localApi.buscarTodosPorUsuario(this.usuario.usuarioId).subscribe(
+      {
+        next: (local: Local[]) => {
+          local.forEach((l) => this.availableRooms.push(l.nome))
+        }
+      }
+    )
   }
 
-  /** Muda o estado atual (modo de inserção) */
+  ngOnInit(): void {
+    const canvasEl = this.canvas.nativeElement as HTMLCanvasElement;
+    this.ctx = canvasEl.getContext('2d')!;
+    this.renderCanvas();
+  }
+
   setMode(mode: 'addRoom' | 'addWifi'): void {
     this.mode = mode;
   }
 
-  /** Início de uma ação (desenho do cômodo ou Wi-Fi) */
   startAction(event: MouseEvent): void {
-    if (!this.mode || this.mode === 'addWifi') return;
-
+    if (!this.mode || this.mode === 'addWifi') {
+      return;
+    }
     const rect = (event.target as HTMLCanvasElement).getBoundingClientRect();
     this.tempStartX = event.clientX - rect.left;
     this.tempStartY = event.clientY - rect.top;
     this.isDrawing = true;
   }
 
-  /** Finaliza a ação (desenhar cômodo ou definir Wi-Fi) */
   endAction(event: MouseEvent): void {
     if (!this.mode) return;
 
@@ -78,62 +90,29 @@ export class WifiHeatmapComponent implements OnInit {
 
     if (this.mode === 'addRoom' && this.isDrawing) {
       this.isDrawing = false;
-
-      // Calcula as dimensões do cômodo
       const width = x - this.tempStartX;
       const height = y - this.tempStartY;
 
-      // Verifica sobreposição
-      const overlaps = this.checkOverlap(
-        this.tempStartX,
-        this.tempStartY,
-        width,
-        height
-      );
-
-      if (overlaps) {
-        alert('Não é possível adicionar o cômodo aqui. Ele está sobreposto!');
-        return;
-      }
-
-      // Adiciona o cômodo selecionado
       if (this.selectedRoom) {
         this.rooms.push({
           x: this.tempStartX,
           y: this.tempStartY,
           width,
           height,
-          name: this.selectedRoom,
+          name: this.selectedRoom
         });
-
-        // Remove o cômodo da lista de disponíveis
-        this.availableRooms = this.availableRooms.filter(
-          (room) => room !== this.selectedRoom
-        );
-        this.selectedRoom = null; // Reseta a seleção
-        this.renderCanvas();
+        this.availableRooms = this.availableRooms.filter(r => r !== this.selectedRoom);
+        this.selectedRoom = null;
       }
+
     } else if (this.mode === 'addWifi') {
       this.wifiLocation = { x, y };
-      this.mode = null; // Sai do modo Wi-Fi
-      this.renderCanvas();
-      this.drawHeatmap();
+      this.mode = null;
     }
+
+    this.renderCanvas();
   }
 
-  /** Verifica se o novo cômodo está sobreposto a algum outro */
-  checkOverlap(x: number, y: number, width: number, height: number): boolean {
-    return this.rooms.some((room) => {
-      return !(
-        x + width <= room.x || // Lado direito do novo fica antes do lado esquerdo do existente
-        y + height <= room.y || // Base do novo fica acima do topo do existente
-        x >= room.x + room.width || // Lado esquerdo do novo fica após o lado direito do existente
-        y >= room.y + room.height // Topo do novo fica abaixo da base do existente
-      );
-    });
-  }
-
-  /** Desenho dinâmico ao mover o mouse */
   draw(event: MouseEvent): void {
     if (!this.isDrawing || this.mode !== 'addRoom') return;
 
@@ -141,9 +120,8 @@ export class WifiHeatmapComponent implements OnInit {
     const currentX = event.clientX - rect.left;
     const currentY = event.clientY - rect.top;
 
+    // Redesenha tudo e mostra o retângulo “dinâmico” que o usuário está criando
     this.renderCanvas();
-
-    // Desenha o cômodo temporário
     this.ctx.strokeStyle = this.selectedRoom ? 'blue' : 'gray';
     this.ctx.strokeRect(
       this.tempStartX,
@@ -153,56 +131,83 @@ export class WifiHeatmapComponent implements OnInit {
     );
   }
 
-  /** Renderiza todos os elementos no canvas */
   renderCanvas(): void {
+    // Limpa o canvas
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-    // Desenha todos os cômodos
-    this.rooms.forEach((room) => {
-      this.ctx.strokeStyle = 'black';
-      this.ctx.strokeRect(room.x, room.y, room.width, room.height);
+    // Desenha cada cômodo
+    this.rooms.forEach(room => {
+      // cor de fundo do cômodo
       this.ctx.fillStyle = 'rgba(0, 0, 255, 0.1)';
       this.ctx.fillRect(room.x, room.y, room.width, room.height);
 
-      // Escreve o nome do cômodo
+      // nome do cômodo no centro
       this.ctx.fillStyle = 'black';
       this.ctx.font = '14px Arial';
       this.ctx.textAlign = 'center';
       this.ctx.textBaseline = 'middle';
-      this.ctx.fillText(
-        room.name,
-        room.x + room.width / 2,
-        room.y + room.height / 2
-      );
+      this.ctx.fillText(room.name, room.x + room.width / 2, room.y + room.height / 2);
     });
 
-    // Desenha o Wi-Fi
+    // Desenha as bordas de cada cômodo (ex.: a mesma lógica de ocultar partes sobrepostas pode ser adaptada aqui)
+    this.drawAllRoomBorders();
+
+    // Caso tenhamos um Wi-Fi, desenha o ponto e depois o gradiente só sobre os cômodos
     if (this.wifiLocation) {
+      // Desenha o ponto vermelhinho do Wi-Fi
       this.ctx.beginPath();
       this.ctx.arc(this.wifiLocation.x, this.wifiLocation.y, 6, 0, Math.PI * 2);
       this.ctx.fillStyle = 'red';
       this.ctx.fill();
+
+      // Desenha o gradiente “recortando” para que apareça apenas nos cômodos
+      this.drawClippedHeatmap();
     }
   }
 
-  /** Adiciona o mapa de calor */
-  drawHeatmap(): void {
+  private drawClippedHeatmap(): void {
     if (!this.wifiLocation) return;
 
+    // Cria o gradiente radial
+    const radius = 300;
     const grad = this.ctx.createRadialGradient(
-      this.wifiLocation.x,
-      this.wifiLocation.y,
-      0,
-      this.wifiLocation.x,
-      this.wifiLocation.y,
-      300
+      this.wifiLocation.x, this.wifiLocation.y, 0,
+      this.wifiLocation.x, this.wifiLocation.y, radius
     );
-
     grad.addColorStop(0, 'rgba(0, 255, 0, 0.5)');
     grad.addColorStop(0.5, 'rgba(255, 255, 0, 0.3)');
     grad.addColorStop(1, 'rgba(255, 0, 0, 0.1)');
 
+    // Salva o estado do contexto
+    this.ctx.save();
+
+    // Inicia um caminho que une todos os cômodos
+    this.ctx.beginPath();
+    this.rooms.forEach(room => {
+      this.ctx.rect(room.x, room.y, room.width, room.height);
+    });
+
+    // Faz o clipping para que o desenho só apareça dentro dos retângulos
+    this.ctx.clip();
+
+    // Preenche o gradiente dentro do clipping
     this.ctx.fillStyle = grad;
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+    // Restaura o contexto para desfazer o clipping
+    this.ctx.restore();
+  }
+
+  /**
+   * Exemplo simples de como desenhar as bordas de cada cômodo.
+   * Caso preciso, adapte para remover bordas sobrepostas.
+   */
+  private drawAllRoomBorders(): void {
+    this.ctx.strokeStyle = 'black';
+    this.ctx.lineWidth = 1;
+
+    this.rooms.forEach(room => {
+      this.ctx.strokeRect(room.x, room.y, room.width, room.height);
+    });
   }
 }

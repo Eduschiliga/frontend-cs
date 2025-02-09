@@ -1,7 +1,7 @@
 import {Medicao} from '../../medicao/model/medicao';
 
 export interface Local {
-  id?: number;
+  localId?: number;
   nome: string;
   medicoes: Medicao[];
 }

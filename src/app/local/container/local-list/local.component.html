@@ -37,12 +37,14 @@
       [tableStyle]="{'min-width': '50rem'}">
       <ng-template pTemplate="header">
         <tr>
+          <th class="w-1">ID</th>
           <th class="w-1">Nome</th>
           <th class="w-1">Ações</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-local>
         <tr>
+          <td># {{ local.localId }}</td>
           <td>{{ local.nome }}</td>
 
           <td class="flex justify-content-center align-items-center gap-2">
