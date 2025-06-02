@@ -5,13 +5,14 @@ import {AuthStateService} from '../service/state/auth.state.service';
 import {Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
     private authApi: AuthApiService,
     private authStateUsuario: AuthStateService
-  ) {}
+  ) {
+  }
 
   canActivate(): Observable<boolean> {
     const token = localStorage.getItem('token');
@@ -22,15 +23,13 @@ export class AuthGuard implements CanActivate {
     }
 
     return this.authApi.buscarPorToken(token).pipe(
-      map((usuario) => {
+      map((response) => {
         this.authStateUsuario.usuario = {
-          login: usuario.login,
+          email: response.usuario.email,
           senha: '',
           token: token,
           isAuth: true,
-          usuarioId: usuario.usuarioId,
-          email: usuario.email,
-          nomeCompleto: usuario.nomeCompleto,
+          nome: response.usuario.nome,
         };
         return true;
       }),

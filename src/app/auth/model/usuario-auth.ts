@@ -7,11 +7,9 @@ export interface UsuarioAuth extends Usuario{
 
 export function buildUsuarioAuth(): UsuarioAuth {
   return {
-    usuarioId: 0,
     email: '',
-    login: '',
     senha: '',
-    nomeCompleto: '',
+    nome: '',
     isAuth: false,
     token: ''
   };

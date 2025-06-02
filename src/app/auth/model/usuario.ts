@@ -1,29 +1,30 @@
 export interface Usuario {
-  usuarioId: number;
   email: string;
-  login: string;
+  nome: string;
   senha: string;
-  nomeCompleto: string;
+}
+
+export interface UsuarioResponse {
+  mensagem: string;
+  usuario: Usuario;
 }
 
 export interface UsuarioLogin {
-  login: string;
+  email: string;
   senha: string;
 }
 
 export function buildUsuario(): Usuario {
   return {
-    usuarioId: 0,
     email: '',
-    login: '',
+    nome: '',
     senha: '',
-    nomeCompleto: ''
   };
 }
 
 export function buildUsuarioLogin() {
   return {
-    login: '',
+    email: '',
     senha: ''
   }
 }

@@ -10,17 +10,12 @@ export const routes: Routes = [
     loadChildren: () => import('./home/home.route').then(r => r.HOME_ROUTES)
   },
   {
-    path: 'local',
+    path: 'usuario',
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
-    loadChildren: () => import('./local/local.route').then(r => r.LOCAL_ROUTES)
+    loadChildren: () => import('./local/usuario.route').then(r => r.USUARIO_ROUTES)
   },
-  {
-    path: 'wifiheatmap',
-    canActivate: [AuthGuard],
-    runGuardsAndResolvers: 'always',
-    loadChildren: () => import('./wifi-heatmap/wifi-heatmap.route').then(r => r.WIFI_ROUTES)
-  },
+
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.route').then(r => r.AUTH_ROUTES)

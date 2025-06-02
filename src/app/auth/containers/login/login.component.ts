@@ -3,7 +3,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {InputTextModule} from "primeng/inputtext";
 import {AuthStateService} from '../../service/state/auth.state.service';
 import {AuthApiService} from '../../service/api/auth.api.service';
-import {buildUsuarioLogin, Usuario, UsuarioLogin} from '../../model/usuario';
+import {buildUsuarioLogin, Usuario, UsuarioLogin, UsuarioResponse} from '../../model/usuario';
 import {Button} from 'primeng/button';
 import {ToastModule} from 'primeng/toast';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -34,14 +34,13 @@ export class LoginComponent {
     private authState: AuthStateService,
     private authApi: AuthApiService,
     private messageService: MessageService,
-    private route: ActivatedRoute,
     private router: Router,
   ) {
   }
 
   public login() {
 
-    if (this.form.login != '' && this.form.senha != '') {
+    if (this.form.email != '' && this.form.senha != '') {
       this.authApi.login(this.form).subscribe(
         {
           next: (token) => {
@@ -50,19 +49,22 @@ export class LoginComponent {
 
             this.authApi.buscarPorToken(token.token).subscribe(
               {
-                next: (usuario: Usuario) => {
+                next: (response: UsuarioResponse) => {
+                  this.messageService.add({severity: 'success', summary: 'Sucesso!', detail: response.mensagem});
                   let usuarioAuth: UsuarioAuth = buildUsuarioAuth();
 
-                  usuarioAuth.login = usuario.login;
+                  usuarioAuth.nome = response.usuario.nome;
                   usuarioAuth.senha = "";
                   usuarioAuth.token = token.token;
                   usuarioAuth.isAuth = true;
-                  usuarioAuth.usuarioId = usuario.usuarioId;
-                  usuarioAuth.email = usuario.email;
-                  usuarioAuth.nomeCompleto = usuario.nomeCompleto;
+                  usuarioAuth.email = response.usuario.email;
 
                   this.authState.usuario = usuarioAuth;
 
+                },
+                error: (error: HttpErrorResponse) => {
+                  console.log(error)
+                  this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
                 },
                 complete: () => {
                   this.router.navigate(['/home']);

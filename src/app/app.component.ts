@@ -1,14 +1,17 @@
 import {Component} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {Button} from 'primeng/button';
-import {WifiHeatmapComponent} from './wifi-heatmap/wifi-heatmap.component';
+import {RouterOutlet} from '@angular/router';
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, Button, WifiHeatmapComponent],
+  imports: [RouterOutlet, ToastModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  providers: [MessageService]
 })
 export class AppComponent {
+  constructor(private msg: MessageService) {
+  }
   title = 'analiserede-frontend';
 }

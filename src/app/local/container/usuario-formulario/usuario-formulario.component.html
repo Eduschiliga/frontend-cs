@@ -1,0 +1,65 @@
+<p-confirmDialog/>
+<p-toast></p-toast>
+
+<app-menu></app-menu>
+
+<main class="shadow-1 border-round-md my-5 p-3">
+  <p-toolbar class="w-full p-0 mt-3">
+    <div class=" p-toolbar-group-right">
+      <p>Editar Usuário</p>
+    </div>
+  </p-toolbar>
+
+  <form class="flex flex-column gap-3 mt-3">
+    <div class="flex flex-column gap-2">
+      <label for="nome">Nome</label>
+      <input
+        pInputText
+        id="nome"
+        [(ngModel)]="form.nome"
+        name="nome"
+        maxlength="255"
+      />
+      <small>
+        {{ form.nome?.length || 0 }} / 255 </small>
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="nome">Senha</label>
+      <input
+        pInputText
+        id="nome"
+        [(ngModel)]="form.senha"
+        name="nome"
+        maxlength="20"
+        min="8"
+      />
+      <small>
+        {{ form.senha.length }} / 20
+      </small>
+    </div>
+
+    <p-toolbar class="w-full p-0 mt-3">
+      <div class=" p-toolbar-group-left">
+      </div>
+      <div class=" p-toolbar-group-right">
+        <div class="flex justify-content-end align-items-center gap-2">
+          <p-button
+            type="button"
+            label="Cancelar"
+            severity="secondary"
+            (click)="voltar()"
+          />
+
+          <p-button
+            type="submit"
+            label="Salvar"
+            severity="success"
+            (click)="salvar()"
+          />
+        </div>
+      </div>
+    </p-toolbar>
+
+  </form>
+</main>

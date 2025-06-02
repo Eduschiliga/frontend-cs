@@ -7,7 +7,8 @@ import {buildUsuario, Usuario} from '../../model/usuario';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {Router, RouterLink} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
-import {UsuarioService} from '../../../usuario/usuario.service';
+import {UsuarioService} from '../../../local/service/api/usuario.service';
+import {MensagemSucesso} from '../../../model/MensagemSucesso';
 
 @Component({
   selector: 'app-cadastro',
@@ -36,18 +37,19 @@ export class CadastroComponent {
 
   public login() {
 
-    if (this.form.login != '' && this.form.senha != '') {
+    if (this.form.nome != '' && this.form.senha != '' && this.form.email != '') {
       this.usuarioApi.salvar(this.form).subscribe(
         {
-          next: () => {
+          next: (msg: MensagemSucesso) => {
             this.messageService.add({
               severity: 'success',
               summary: 'Sucesso!',
-              detail: "Usuário cadastrado com sucesso!"
+              detail: msg.mensagem
             });
           },
           error: (error: HttpErrorResponse) => {
-            this.messageService.add({severity: 'error', summary: 'Erro', detail: error.message});
+            console.log(error)
+            this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
           },
           complete: () => {
             this.router.navigate(['/']).then();

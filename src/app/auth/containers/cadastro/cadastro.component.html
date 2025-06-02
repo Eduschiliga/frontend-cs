@@ -11,6 +11,7 @@
         name="email"
         type="email"
         maxlength="255"
+        required
       />
     </div>
 
@@ -19,20 +20,10 @@
       <input
         pInputText
         id="nomeCompleto"
-        [(ngModel)]="form.nomeCompleto"
+        [(ngModel)]="form.nome"
         name="nomeCompleto"
         maxlength="255"
-      />
-    </div>
-
-    <div class="flex flex-column gap-2">
-      <label for="login" class="required">Login</label>
-      <input
-        pInputText
-        id="login"
-        [(ngModel)]="form.login"
-        name="login"
-        maxlength="255"
+        required
       />
     </div>
 
@@ -43,8 +34,10 @@
         id="senha"
         [(ngModel)]="form.senha"
         name="senha"
-        maxlength="255"
+        minlength="8"
+        maxlength="20"
         type="password"
+        required
       />
     </div>
   </form>
