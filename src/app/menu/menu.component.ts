@@ -9,6 +9,8 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastModule} from 'primeng/toast';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {AuthApiService} from '../auth/service/api/auth.api.service';
+import {MensagemSucesso} from '../model/MensagemSucesso';
 
 @Component({
   selector: 'app-menu',
@@ -33,6 +35,7 @@ export class MenuComponent {
   constructor(
     protected route: Router,
     private auth: AuthStateService,
+    private authApi: AuthApiService,
     private usuarioService: UsuarioService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
@@ -41,10 +44,33 @@ export class MenuComponent {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.clear();
-    this.auth.apagarUsuario();
-    this.route.navigate(['/login']).then();
+    console.log(this.usuario)
+    let token = this.usuario.token;
+    console.log(this.usuario.token)
+    console.log(token)
+
+    if (token != null) {
+      this.authApi.logout(token).subscribe(
+        {
+          next: (msg: MensagemSucesso) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
+              detail: msg.mensagem
+            });
+
+            localStorage.removeItem('token');
+            localStorage.clear();
+            this.auth.apagarUsuario();
+            this.route.navigate(['/login']).then();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error)
+            this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
+          },
+        }
+      )
+    }
   }
 
   excluir() {

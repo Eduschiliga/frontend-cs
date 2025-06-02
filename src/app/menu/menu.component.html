@@ -6,11 +6,18 @@
                 [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }" shape="circle"/>
 
       <div class="flex flex-column gap-1 justify-content-center align-content-center align-items-start">
-        <span class="font-bold text-sm">{{ usuario.nome }}</span>
-        <span class="font-bold text-sm">{{ usuario.email }}</span>
+        @if (usuario.nome != null  || usuario.nome != undefined) {
+          <span class="font-bold text-sm">{{ usuario.nome }}</span>
+        } @else {
+          <span class="font-bold text-sm">#Nome#</span>
+        }
+
+        @if (usuario.email != null  || usuario.email != undefined) {
+          <span class="font-bold text-sm">{{ usuario.email }}</span>
+        } @else {
+          <span class="font-bold text-sm">#E-mail#</span>
+        }
       </div>
-
-
     </div>
 
     <div class="flex gap-3">
