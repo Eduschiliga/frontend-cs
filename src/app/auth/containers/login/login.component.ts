@@ -10,6 +10,7 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {buildUsuarioAuth, UsuarioAuth} from '../../model/usuario-auth';
+import {PasswordModule} from 'primeng/password';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ import {buildUsuarioAuth, UsuarioAuth} from '../../model/usuario-auth';
     ReactiveFormsModule,
     Button,
     ToastModule,
-    RouterLink
+    RouterLink,
+    PasswordModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './login.component.html',
@@ -63,7 +65,6 @@ export class LoginComponent {
 
                 },
                 error: (error: HttpErrorResponse) => {
-                  console.log(error)
                   this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
                 },
                 complete: () => {
@@ -74,7 +75,7 @@ export class LoginComponent {
 
           },
           error: (error: HttpErrorResponse) => {
-            this.messageService.add({severity: 'error', summary: 'Erro', detail: error.message});
+            this.messageService.add({severity: 'error', summary: 'Erro', detail: error.error.mensagem});
           },
           complete: () => {
             return;

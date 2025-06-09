@@ -1,36 +1,38 @@
-import {Component} from '@angular/core';
-import {Button, ButtonModule} from "primeng/button";
-import {Router, RouterLink} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ButtonModule} from "primeng/button";
+import {Router} from '@angular/router';
 import {AuthStateService} from '../auth/service/state/auth.state.service';
 import {buildUsuarioAuth, UsuarioAuth} from '../auth/model/usuario-auth';
 import {AvatarModule} from 'primeng/avatar';
 import {UsuarioService} from '../local/service/api/usuario.service';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ToastModule} from 'primeng/toast';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {AuthApiService} from '../auth/service/api/auth.api.service';
 import {MensagemSucesso} from '../model/MensagemSucesso';
+import {MenuModule} from 'primeng/menu';
+import {PanelMenuModule} from 'primeng/panelmenu';
 
 @Component({
   selector: 'app-menu',
   imports: [
-    Button,
-    RouterLink,
-    AvatarModule,
     ButtonModule,
-    RouterLink,
     AvatarModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    MenuModule,
+    PanelMenuModule
   ],
   standalone: true,
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
   providers: [MessageService, ConfirmationService]
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
   protected usuario: UsuarioAuth = buildUsuarioAuth();
+
+  menuItems: MenuItem[] = [];
 
   constructor(
     protected route: Router,
@@ -43,34 +45,65 @@ export class MenuComponent {
     this.auth.usuario.subscribe(usuario => this.usuario = usuario);
   }
 
+  ngOnInit() {
+    this.menuItems = [
+      {
+        label: 'Navegação',
+        icon: 'pi pi-fw pi-compass',
+        expanded: true,
+        styleClass: 'font-bold',
+        items: [
+          {
+            label: 'Home',
+            icon: 'pi pi-fw pi-home',
+            routerLink: ['/home']
+          }
+        ]
+      },
+      {
+        label: 'Minha Conta',
+        icon: 'pi pi-fw pi-user',
+        expanded: true,
+        items: [
+          {
+            label: 'Editar Perfil',
+            icon: 'pi pi-fw pi-user-edit',
+            routerLink: ['/usuario/editar']
+          },
+          {
+            label: 'Excluir Conta',
+            icon: 'pi pi-fw pi-trash',
+            command: () => this.excluir()
+          }
+        ]
+      }
+    ];
+  }
+
   logout() {
-    console.log(this.usuario)
     let token = this.usuario.token;
-    console.log(this.usuario.token)
-    console.log(token)
-
     if (token != null) {
-      this.authApi.logout(token).subscribe(
-        {
-          next: (msg: MensagemSucesso) => {
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Sucesso',
-              detail: msg.mensagem
-            });
-
-            localStorage.removeItem('token');
-            localStorage.clear();
-            this.auth.apagarUsuario();
-            this.route.navigate(['/login']).then();
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error)
-            this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
-          },
-        }
-      )
+      this.authApi.logout(token).subscribe({
+        next: (msg: MensagemSucesso) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: msg.mensagem
+          });
+          this.limparDados();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
+        },
+      });
     }
+  }
+
+  limparDados() {
+    localStorage.removeItem('token');
+    localStorage.clear();
+    this.auth.apagarUsuario();
+    this.route.navigate(['/login']).then();
   }
 
   excluir() {
@@ -82,24 +115,19 @@ export class MenuComponent {
       rejectLabel: 'Cancelar',
       accept: () => {
         if (this.usuario.token != null) {
-          this.usuarioService.deletar(this.usuario.token).subscribe(
-            {
-              next: () => {
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Sucesso',
-                  detail: 'Usuário excluído com sucesso!'
-                });
-                setTimeout(() => {
-                  this.logout();
-                }, 1500);
-              },
-              error: (error: HttpErrorResponse) => {
-                console.log(error)
-                this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
-              },
-            }
-          )
+          this.usuarioService.deletar(this.usuario.token).subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Usuário excluído com sucesso!'
+              });
+              this.limparDados()
+            },
+            error: (error: HttpErrorResponse) => {
+              this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
+            },
+          });
         }
       },
       reject: () => {

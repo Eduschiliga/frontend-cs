@@ -9,6 +9,7 @@ import {Router, RouterLink} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {UsuarioService} from '../../../local/service/api/usuario.service';
 import {MensagemSucesso} from '../../../model/MensagemSucesso';
+import {PasswordModule} from 'primeng/password';
 
 @Component({
   selector: 'app-cadastro',
@@ -18,7 +19,8 @@ import {MensagemSucesso} from '../../../model/MensagemSucesso';
     InputTextModule,
     ReactiveFormsModule,
     ToastModule,
-    RouterLink
+    RouterLink,
+    PasswordModule
   ],
   standalone: true,
   providers: [MessageService, ConfirmationService],
@@ -48,7 +50,6 @@ export class CadastroComponent {
             });
           },
           error: (error: HttpErrorResponse) => {
-            console.log(error)
             this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
           },
           complete: () => {

@@ -1,42 +1,29 @@
-<nav class="shadow w-full">
-  <div class="flex gap-3 justify-content-between p-menu p-menu-vertical p-menu-list list-none w-full p-2">
-    <div class="flex gap-2 justify-content-center align-content-center align-items-center">
+<aside class="flex flex-column h-screen w-18rem fixed top-0 left-0 surface-ground border-right-1 surface-border">
 
-      <p-avatar [label]="usuario.nome[0].toUpperCase()" styleClass="mr-2" size="large"
-                [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }" shape="circle"/>
-
-      <div class="flex flex-column gap-1 justify-content-center align-content-center align-items-start">
-        @if (usuario.nome != null  || usuario.nome != undefined) {
-          <span class="font-bold text-sm">{{ usuario.nome }}</span>
-        } @else {
-          <span class="font-bold text-sm">#Nome#</span>
-        }
-
-        @if (usuario.email != null  || usuario.email != undefined) {
-          <span class="font-bold text-sm">{{ usuario.email }}</span>
-        } @else {
-          <span class="font-bold text-sm">#E-mail#</span>
-        }
-      </div>
+  <div class="flex align-items-center gap-3 p-4 surface-b border-bottom-1 surface-border mb-4">
+    <p-avatar [label]="usuario.nome ? usuario.nome[0].toUpperCase() : '#'"
+              size="large"
+              shape="circle" />
+    <div class="flex flex-column">
+      <span class="font-bold">{{ usuario.nome || 'Carregando...' }}</span>
+      <span class="text-sm text-color-secondary">{{ usuario.email || '...' }}</span>
     </div>
-
-    <div class="flex gap-3">
-      <p-button raised [routerLink]="['/usuario/editar']" label="Editar" class="p-button-text"></p-button>
-      <p-button raised (onClick)="excluir()" label="Excluir" class="p-button-text"></p-button>
-    </div>
-
-    <div class="flex gap-3">
-      <p-button raised [routerLink]="['/home']" label="Home" class="p-button-text"></p-button>
-    </div>
-
-
-    <p-button severity="danger" [outlined]="true" raised (onClick)="logout()" label="Desconectar"
-              class="p-button-text"></p-button>
-
   </div>
-</nav>
+
+  <div class="flex-grow-1 overflow-y-auto px-3">
+    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"/>
+  </div>
+
+  <div class="mt-auto p-3 border-top-1 surface-border">
+    <p-button
+      label="Desconectar"
+      icon="pi pi-sign-out"
+      styleClass="p-button-danger p-button-text w-full"
+      (onClick)="logout()"
+    />
+  </div>
+
+</aside>
 
 <p-toast></p-toast>
-
-<p-confirmDialog >
-</p-confirmDialog>
+<p-confirmDialog></p-confirmDialog>

@@ -1,0 +1,21 @@
+/* Em: src/app/app.component.css (ou o CSS do seu layout principal) */
+
+.main-layout {
+  display: flex;
+  justify-content: center;
+}
+
+/* Esta classe é aplicada na sua área de conteúdo principal (<main>).
+  Vamos aumentar o padding para dar mais espaço.
+*/
+.content-area {
+  flex-grow: 1;
+  margin-left: 280px; /* Mantém o espaço para a largura da sidebar */
+
+  /* ALTERAÇÃO: Aumente o padding.
+    Isso cria um espaçamento interno em todos os lados (cima, baixo, esquerda, direita),
+    garantindo que o conteúdo da sua página nunca comece colado nas bordas ou atrás do menu.
+    Experimente valores como 3rem ou 4rem até ficar do seu agrado.
+  */
+  padding: 4rem;
+}

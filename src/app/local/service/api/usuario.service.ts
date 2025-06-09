@@ -4,12 +4,15 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Usuario, UsuarioResponse} from '../../../auth/model/usuario';
 import {MensagemSucesso} from '../../../model/MensagemSucesso';
 import {UsuarioAtualizar} from '../../model/usuario-atualizar';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  private URL = 'http://localhost:8282/api/usuarios';
+  private readonly URL_BASE = environment.apiUrl;
+
+  private URL = this.URL_BASE + '/usuarios';
 
   constructor(
     private http: HttpClient
@@ -34,9 +37,5 @@ export class UsuarioService {
     });
 
     return this.http.delete<void>(this.URL, {headers});
-  }
-
-  public buscarPorId(usuarioId: number): Observable<Usuario> {
-    return this.http.get<Usuario>(`${this.URL}/${usuarioId}`);
   }
 }

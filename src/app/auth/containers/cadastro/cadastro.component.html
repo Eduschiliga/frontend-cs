@@ -29,16 +29,16 @@
 
     <div class="flex flex-column gap-2">
       <label for="senha" class="required">Senha</label>
-      <input
-        pInputText
+      <p-password
         id="senha"
         [(ngModel)]="form.senha"
         name="senha"
-        minlength="8"
-        maxlength="20"
-        type="password"
-        required
-      />
+        [toggleMask]="true"
+        [feedback]="false"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        required>
+      </p-password>
     </div>
   </form>
 

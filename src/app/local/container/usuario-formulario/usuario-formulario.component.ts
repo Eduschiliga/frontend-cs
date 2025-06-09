@@ -16,6 +16,7 @@ import {AuthStateService} from '../../../auth/service/state/auth.state.service';
 import {UsuarioResponse} from '../../../auth/model/usuario';
 import {UsuarioService} from '../../service/api/usuario.service';
 import {HttpErrorResponse} from '@angular/common/http';
+import {PasswordModule} from 'primeng/password';
 
 @Component({
   selector: 'app-usuario-formulario',
@@ -28,7 +29,7 @@ import {HttpErrorResponse} from '@angular/common/http';
     FieldsetModule,
     ConfirmDialogModule,
     ToolbarModule,
-    MenuComponent,
+    PasswordModule,
   ],
   templateUrl: './usuario-formulario.component.html',
   styleUrl: './usuario-formulario.component.css',
@@ -48,10 +49,8 @@ export class UsuarioFormularioComponent implements OnInit {
   ) {
     this.auth.usuario$.subscribe(usuarioAuth => {
       this.usuarioLogado = usuarioAuth;
-      if (this.usuarioLogado && this.usuarioLogado.isAuth) {
-        if (!this.form.nome || this.form.nome !== this.usuarioLogado.nome) {
+      if (this.usuarioLogado.isAuth) {
           this.form.nome = this.usuarioLogado.nome;
-        }
       }
     });
   }
@@ -134,7 +133,6 @@ export class UsuarioFormularioComponent implements OnInit {
           }, 1500);
         },
         error: (error: HttpErrorResponse) => {
-          console.log(error)
           this.messageService.add({severity: 'error', summary: error.error.erro, detail: error.error.mensagem});
         },
       });

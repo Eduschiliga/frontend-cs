@@ -1,0 +1,11 @@
+:host ::ng-deep .p-panelmenu .p-panelmenu-header > a {
+  background: transparent !important;
+}
+
+:host ::ng-deep .p-panelmenu .p-panelmenu-content {
+  background: transparent !important;
+}
+
+:host ::ng-deep .p-panelmenu .p-panelmenu-header > a {
+  border: none !important;
+}

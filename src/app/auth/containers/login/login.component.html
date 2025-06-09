@@ -14,14 +14,17 @@
     </div>
 
     <div class="flex flex-column gap-2">
-      <label for="senha">Senha</label>
-      <input
-        pInputText
+      <label for="senha" class="required">Senha</label>
+      <p-password
         id="senha"
         [(ngModel)]="form.senha"
         name="senha"
-        maxlength="255"
-      />
+        [toggleMask]="true"
+        [feedback]="false"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        required>
+      </p-password>
     </div>
   </form>
 
