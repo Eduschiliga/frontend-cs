@@ -38,7 +38,6 @@ export class CadastroComponent {
   }
 
   public login() {
-
     if (this.form.nome != '' && this.form.senha != '' && this.form.email != '') {
       this.usuarioApi.salvar(this.form).subscribe(
         {
@@ -63,5 +62,4 @@ export class CadastroComponent {
       this.messageService.add({severity: 'error', summary: 'Erro', detail: "Campos inválidos!"});
     }
   }
-
 }

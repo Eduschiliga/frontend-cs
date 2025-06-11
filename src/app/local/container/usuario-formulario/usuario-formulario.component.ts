@@ -10,7 +10,6 @@ import {CalendarModule} from 'primeng/calendar';
 import {FieldsetModule} from 'primeng/fieldset';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ToolbarModule} from "primeng/toolbar";
-import {MenuComponent} from "../../../menu/menu.component";
 import {buildUsuarioAuth, UsuarioAuth} from '../../../auth/model/usuario-auth';
 import {AuthStateService} from '../../../auth/service/state/auth.state.service';
 import {UsuarioResponse} from '../../../auth/model/usuario';
