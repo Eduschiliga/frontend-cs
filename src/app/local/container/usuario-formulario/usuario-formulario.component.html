@@ -1,48 +1,45 @@
-<p-confirmDialog/>
+<p-confirmDialog />
 <p-toast></p-toast>
 
-<main class="shadow-1 border-round-md p-3 h-full flex flex-column gap-2 justify-content-evenly">
-  <p-toolbar class="w-full p-0">
-    <div class=" p-toolbar-group-right">
-      <p>Editar Usuário</p>
-    </div>
+<main class="shadow-1 border-round-md p-3 h-full flex flex-column gap-2 justify-content-between">
+
+  <div> <p-toolbar class="w-full p-0">
+    <div class="p-toolbar-group-left"> <h2 class="text-lg font-semibold">Editar Usuário</h2> </div>
   </p-toolbar>
 
-  <form class="flex flex-column gap-4 mt-3">
-    <div class="flex flex-column gap-2">
-      <label for="nome">Nome</label>
-      <input
-        pInputText
-        id="nome"
-        [(ngModel)]="form.nome"
-        name="nome"
-        maxlength="255"
-        required
-      />
-      <small>
-        {{ form.nome?.length || 0 }} / 255
-      </small>
-    </div>
+    <form class="flex flex-column gap-4 mt-4">
+      <div class="flex flex-column gap-2">
+        <label for="nome">Nome</label>
+        <input
+          pInputText
+          id="nome"
+          [(ngModel)]="form.nome"
+          name="nome"
+          maxlength="255"
+          required
+        />
+        <small>{{ form.nome?.length || 0 }} / 255</small>
+      </div>
 
-    <div class="flex flex-column gap-2">
-      <label for="senha" class="required">Senha</label>
-      <p-password
-        id="senha"
-        [(ngModel)]="form.senha"
-        name="senha"
-        [toggleMask]="true"
-        [feedback]="false"
-        styleClass="w-full"
-        inputStyleClass="w-full"
-        minlength="8"
-        maxLength="20"
-        required>
-      </p-password>
-      <small>
-        {{ form.senha.length }} / 20
-      </small>
-    </div>
-  </form>
+      <div class="flex flex-column gap-2">
+        <label for="senha" class="required">Senha</label>
+        <p-password
+          id="senha"
+          [(ngModel)]="form.senha"
+          name="senha"
+          [toggleMask]="true"
+          [feedback]="false"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          minlength="8"
+          maxLength="20"
+          required
+        >
+        </p-password>
+        <small>{{ form.senha?.length || 0 }} / 20</small>
+      </div>
+    </form>
+  </div>
 
   <p-toolbar class="w-full p-0 mt-3">
     <div class="p-toolbar-group-left"></div>

@@ -1,38 +1,45 @@
-import {Component, OnInit} from '@angular/core';
-import {ButtonModule} from "primeng/button";
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthStateService} from '../auth/service/state/auth.state.service';
-import {buildUsuarioAuth, UsuarioAuth} from '../auth/model/usuario-auth';
-import {AvatarModule} from 'primeng/avatar';
-import {UsuarioService} from '../local/service/api/usuario.service';
 import {ConfirmationService, MenuItem, MessageService} from 'primeng/api';
 import {HttpErrorResponse} from '@angular/common/http';
+import {Menu, MenuModule} from 'primeng/menu';
+
+import {AuthStateService} from '../auth/service/state/auth.state.service';
+import {AuthApiService} from '../auth/service/api/auth.api.service';
+import {UsuarioService} from '../local/service/api/usuario.service';
+
+import {buildUsuarioAuth, UsuarioAuth} from '../auth/model/usuario-auth';
+import {MensagemSucesso} from '../model/MensagemSucesso';
+
+import {ButtonModule} from "primeng/button";
+import {AvatarModule} from 'primeng/avatar';
 import {ToastModule} from 'primeng/toast';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {AuthApiService} from '../auth/service/api/auth.api.service';
-import {MensagemSucesso} from '../model/MensagemSucesso';
-import {MenuModule} from 'primeng/menu';
-import {PanelMenuModule} from 'primeng/panelmenu';
+import {MenubarModule} from 'primeng/menubar';
 
 @Component({
   selector: 'app-menu',
+  standalone: true,
   imports: [
     ButtonModule,
     AvatarModule,
-    ConfirmDialogModule,
     ToastModule,
-    MenuModule,
-    PanelMenuModule
+    ConfirmDialogModule,
+    MenubarModule,
+    MenuModule
   ],
-  standalone: true,
   templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css',
+  styleUrls: ['./menu.component.css'],
   providers: [MessageService, ConfirmationService]
 })
 export class MenuComponent implements OnInit {
   protected usuario: UsuarioAuth = buildUsuarioAuth();
 
-  menuItems: MenuItem[] = [];
+  items: MenuItem[] = [];
+
+  userMenuItems: MenuItem[] = [];
+
+  @ViewChild('userMenu') userMenu: Menu | undefined;
 
   constructor(
     protected route: Router,
@@ -46,38 +53,44 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.menuItems = [
+    // Define os itens da barra de navegação principal
+    this.items = [
       {
-        label: 'Navegação',
-        icon: 'pi pi-fw pi-compass',
-        expanded: true,
-        styleClass: 'font-bold',
-        items: [
-          {
-            label: 'Home',
-            icon: 'pi pi-fw pi-home',
-            routerLink: ['/home']
-          }
-        ]
+        label: 'Home',
+        icon: 'pi pi-fw pi-home',
+        routerLink: ['/home']
       },
       {
-        label: 'Minha Conta',
-        icon: 'pi pi-fw pi-user',
-        expanded: true,
-        items: [
-          {
-            label: 'Editar Perfil',
-            icon: 'pi pi-fw pi-user-edit',
-            routerLink: ['/usuario/editar']
-          },
-          {
-            label: 'Excluir Conta',
-            icon: 'pi pi-fw pi-trash',
-            command: () => this.excluir()
-          }
-        ]
+        label: 'Rascunhos',
+        icon: 'pi pi-fw pi-inbox',
+        routerLink: ['/rascunhos']
       }
     ];
+
+    this.userMenuItems = [
+      {
+        label: 'Editar Perfil',
+        icon: 'pi pi-fw pi-user-edit',
+        routerLink: ['/usuario/editar']
+      },
+      {
+        label: 'Excluir Conta',
+        icon: 'pi pi-fw pi-trash',
+        command: () => this.excluir()
+      },
+      {
+        separator: true // Usamos o separador para criar uma divisão visual
+      },
+      {
+        label: 'Desconectar',
+        icon: 'pi pi-fw pi-sign-out',
+        command: () => this.logout()
+      }
+    ];
+  }
+
+  toggleUserMenu(event: Event) {
+    this.userMenu?.toggle(event);
   }
 
   logout() {
@@ -85,11 +98,7 @@ export class MenuComponent implements OnInit {
     if (token != null) {
       this.authApi.logout(token).subscribe({
         next: (msg: MensagemSucesso) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Sucesso',
-            detail: msg.mensagem
-          });
+          this.messageService.add({severity: 'success', summary: 'Sucesso', detail: msg.mensagem});
           this.limparDados();
         },
         error: (error: HttpErrorResponse) => {

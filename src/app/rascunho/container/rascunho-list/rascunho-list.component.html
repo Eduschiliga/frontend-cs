@@ -1,0 +1,78 @@
+<p-confirmDialog />
+<p-toast></p-toast>
+
+<main class="shadow-1 border-round-md my-5 p-3 h-full flex flex-column gap-3">
+  <p-toolbar class="w-full p-0 ">
+    <div class="p-toolbar-group-left">
+      <h1 class="text-xl font-bold">Lista de Rascunhos</h1>
+    </div>
+    <div class="p-toolbar-group-right">
+      <p-button
+        type="button"
+        label="Novo Rascunho"
+        icon="pi pi-plus"
+        severity="success"
+        (click)="criarRascunho()">
+      </p-button>
+    </div>
+  </p-toolbar>
+
+  <div class="card mt-2">
+    <p-table
+      [value]="rascunhos"
+      [paginator]="true"
+      [rows]="10"
+      [pageLinks]="3"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{'min-width': '50rem'}"
+      responsiveLayout="scroll">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="assunto">Assunto <p-sortIcon field="assunto"></p-sortIcon></th>
+          <th pSortableColumn="emailDestinatario">Destinatário <p-sortIcon field="emailDestinatario"></p-sortIcon></th>
+          <th>Corpo</th>
+          <th class="w-8rem text-center">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rascunho>
+        <tr>
+          <td>{{ rascunho.assunto || '-' }}</td>
+          <td>{{ rascunho.emailDestinatario || '-' }}</td>
+          <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            {{ (rascunho.corpo | slice:0:15) || '-' }}
+          </td>
+          <td class="flex justify-content-center align-items-center gap-2">
+            <p-button
+              pTooltip="Editar Rascunho"
+              tooltipPosition="top"
+              type="button"
+              icon="pi pi-pencil"
+              styleClass="p-button-text p-button-secondary"
+              (click)="editarRascunho(rascunho)">
+            </p-button>
+            <p-button
+              pTooltip="Excluir Rascunho"
+              tooltipPosition="top"
+              type="button"
+              icon="pi pi-trash"
+              styleClass="p-button-text p-button-danger"
+              (click)="deletarRascunho(rascunho)">
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center p-4">
+            <i class="pi pi-inbox" style="font-size: 2rem;"></i>
+            <p class="mt-2">Nenhum rascunho encontrado.</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</main>

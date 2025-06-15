@@ -1,10 +1,10 @@
-<div class="main-layout">
+<div class="min-h-screen flex flex-column">
 
   @if (exibirMenu) {
     <app-menu></app-menu>
   }
 
-  <main [class.content-area]="exibirMenu">
+  <main class="flex-grow-1">
     <router-outlet></router-outlet>
   </main>
 

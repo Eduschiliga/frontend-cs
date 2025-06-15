@@ -1,29 +1,21 @@
-<aside class="flex flex-column h-screen w-18rem fixed top-0 left-0 surface-ground border-right-1 surface-border">
-
-  <div class="flex align-items-center gap-3 p-4 surface-b border-bottom-1 surface-border mb-4">
-    <p-avatar [label]="usuario.nome ? usuario.nome[0].toUpperCase() : '#'"
-              size="large"
-              shape="circle" />
-    <div class="flex flex-column">
-      <span class="font-bold">{{ usuario.nome || 'Carregando...' }}</span>
-      <span class="text-sm text-color-secondary">{{ usuario.email || '...' }}</span>
-    </div>
-  </div>
-
-  <div class="flex-grow-1 overflow-y-auto px-3">
-    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}"/>
-  </div>
-
-  <div class="mt-auto p-3 border-top-1 surface-border">
-    <p-button
-      label="Desconectar"
-      icon="pi pi-sign-out"
-      styleClass="p-button-danger p-button-text w-full"
-      (onClick)="logout()"
-    />
-  </div>
-
-</aside>
-
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
+
+<div class="card relative z-5">
+  <p-menubar [model]="items">
+    <ng-template pTemplate="end">
+      <div class="flex align-items-center gap-2 cursor-pointer p-1 border-gray-300 shadow border-1 border-round" (click)="toggleUserMenu($event)">
+        <p-avatar
+          [label]="usuario.nome ? usuario.nome[0].toUpperCase() : '#'"
+          shape="circle"/>
+
+        <div class="flex-column gap-1">
+          <span class="text-sm font-bold hidden md:block">{{ usuario.nome || 'Carregando...' }}</span>
+          <span class="text-sm font-bold hidden md:block">{{ usuario.email || 'Carregando...' }}</span>
+        </div>
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>
+
+<p-menu #userMenu [model]="userMenuItems" [popup]="true" [baseZIndex]="10000"></p-menu>

@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {AuthGuard} from './auth/guards/auth.guard';
+import {RASCUNHO_ROUTES} from './rascunho/rascunho.route';
 
 export const routes: Routes = [
 
@@ -14,6 +15,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     runGuardsAndResolvers: 'always',
     loadChildren: () => import('./local/usuario.route').then(r => r.USUARIO_ROUTES)
+  },
+
+  {
+    path: 'rascunhos',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    loadChildren: () => import('./rascunho/rascunho.route').then(r => r.RASCUNHO_ROUTES)
   },
 
   {
