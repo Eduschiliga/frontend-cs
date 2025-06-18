@@ -1,0 +1,78 @@
+<p-toast></p-toast>
+
+<main class="shadow-1 border-round-md my-5 p-3 h-full flex flex-column gap-3">
+  <p-toolbar class="w-full p-0">
+    <div class="p-toolbar-group-left">
+      <h1 class="text-xl font-bold">Caixa de Entrada</h1>
+    </div>
+    <div class="p-toolbar-group-right">
+      <p-button
+        type="button"
+        label="Novo E-mail"
+        icon="pi pi-plus"
+        severity="success"
+        (click)="novoEmail()">
+      </p-button>
+    </div>
+  </p-toolbar>
+
+  <div class="card mt-2">
+    <p-table
+      [value]="emails"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      styleClass="p-datatable-striped"
+      [tableStyle]="{'min-width': '50rem'}"
+      responsiveLayout="scroll">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="status" class="w-1rem"></th>
+          <th pSortableColumn="emailRemetente">Remetente <p-sortIcon field="emailRemetente"></p-sortIcon></th>
+          <th pSortableColumn="assunto">Assunto <p-sortIcon field="assunto"></p-sortIcon></th>
+          <th class="w-10rem text-center">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-email>
+        <tr [class.font-bold]="email.status === 'ENVIADO'">
+          <td class="text-center">
+            <i class="pi" [ngClass]="{'pi-envelope': email.status === 'ENVIADO', 'pi-envelope-open': email.status === 'LIDO'}"></i>
+          </td>
+          <td>{{ email.emailRemetente }}</td>
+          <td>{{ email.assunto }}</td>
+          <td class="text-center">
+            <p-button
+              pTooltip="Ver E-mail"
+              tooltipPosition="top"
+              type="button"
+              icon="pi pi-eye"
+              styleClass="p-button-text p-button-secondary"
+              (click)="verEmail(email)">
+            </p-button>
+
+            <p-button
+              *ngIf="email.emailRemetente !== usuario.email"
+              pTooltip="Responder"
+              tooltipPosition="top"
+              type="button"
+              icon="pi pi-reply"
+              styleClass="p-button-text p-button-info"
+              (click)="responderEmail(email)">
+            </p-button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="text-center p-4">
+            <i class="pi pi-inbox" style="font-size: 2rem;"></i>
+            <p class="mt-2">Nenhum e-mail encontrado.</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</main>

@@ -64,6 +64,10 @@ export class RascunhoListComponent implements OnInit {
     }
   }
 
+  enviarRascunho(rascunhoId: number): void {
+    this.router.navigate(['/emails/enviar-rascunho', rascunhoId]);
+  }
+
   criarRascunho(): void {
     this.router.navigate(['/rascunhos/novo']);
   }

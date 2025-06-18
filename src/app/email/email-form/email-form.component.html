@@ -1,0 +1,66 @@
+<p-toast></p-toast>
+
+<main class="shadow-1 border-round-md my-5 p-3">
+  <p-toolbar class="w-full p-0">
+    <div class="p-toolbar-group-left">
+      <h1 class="text-xl">
+        {{ tituloPagina }}
+      </h1>
+    </div>
+  </p-toolbar>
+
+  <form #emailForm="ngForm" class="flex flex-column gap-3 mt-3">
+    <div class="flex flex-column gap-2">
+      <label for="destinatario">Destinatário</label>
+      <input
+        pInputText
+        id="destinatario"
+        [(ngModel)]="form.emailDestinatario"
+        name="emailDestinatario"
+        email
+        required
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="assunto">Assunto</label>
+      <input
+        pInputText
+        id="assunto"
+        [(ngModel)]="form.assunto"
+        name="assunto"
+        required
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="corpo">Corpo do E-mail</label>
+      <p-editor
+        [(ngModel)]="form.corpo"
+        name="corpo"
+        [style]="{'height':'320px'}"
+        required>
+      </p-editor>
+    </div>
+
+    <p-toolbar class="w-full p-0 mt-3">
+      <div class="p-toolbar-group-right flex-grow-1">
+        <div class="flex justify-content-end align-items-center gap-2">
+          <p-button
+            type="button"
+            label="Cancelar"
+            severity="secondary"
+            (click)="voltar()">
+          </p-button>
+          <p-button
+            type="button"
+            label="Enviar"
+            icon="pi pi-send"
+            severity="success"
+            (click)="enviar()">
+          </p-button>
+        </div>
+      </div>
+    </p-toolbar>
+  </form>
+</main>

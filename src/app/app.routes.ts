@@ -16,7 +16,12 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'always',
     loadChildren: () => import('./local/usuario.route').then(r => r.USUARIO_ROUTES)
   },
-
+  {
+    path: 'emails',
+    canActivate: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    loadChildren: () => import('./email/email.route').then(r => r.EMAIL_ROUTES)
+  },
   {
     path: 'rascunhos',
     canActivate: [AuthGuard],

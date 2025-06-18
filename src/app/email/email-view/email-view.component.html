@@ -1,0 +1,29 @@
+<main class="shadow-1 border-round-md my-5 p-3">
+  <p-toolbar class="w-full p-0">
+    <div class="p-toolbar-group-left">
+      <p-button
+        type="button"
+        icon="pi pi-arrow-left"
+        (click)="voltar()"
+        styleClass="p-button-text">
+      </p-button>
+    </div>
+  </p-toolbar>
+
+  <div *ngIf="email" class="mt-3">
+    <p-card>
+      <ng-template pTemplate="title">{{ email.assunto }}</ng-template>
+      <ng-template pTemplate="subtitle">
+        De: {{ email.emailRemetente }}<br>
+        Para: {{ email.emailDestinatario }}
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div [innerHTML]="email.corpo"></div>
+      </ng-template>
+    </p-card>
+  </div>
+
+  <div *ngIf="!email" class="text-center p-5">
+    <p>Carregando e-mail...</p>
+  </div>
+</main>

@@ -61,6 +61,11 @@ export class MenuComponent implements OnInit {
         routerLink: ['/home']
       },
       {
+        label: 'E-mails',
+        icon: 'pi pi-fw pi-envelope',
+        routerLink: ['/emails']
+      },
+      {
         label: 'Rascunhos',
         icon: 'pi pi-fw pi-inbox',
         routerLink: ['/rascunhos']
