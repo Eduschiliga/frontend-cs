@@ -80,6 +80,7 @@ export class EmailListComponent implements OnInit {
   }
 
   responderEmail(email: Email): void {
-    this.router.navigate(['/emails/novo'], { state: { emailParaResponder: email } });
+    // AQUI ESTÁ A MUDANÇA: Navega para a rota de resposta com o ID do e-mail
+    this.router.navigate(['/emails/responder', email.emailId]);
   }
 }

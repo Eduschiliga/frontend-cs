@@ -28,7 +28,7 @@ export class EmailService {
   }
 
   buscarPorId(emailId: number, token: string): Observable<EmailResponse> {
-    return this.http.put<EmailResponse>(`${this.URL}/${emailId}`, {}, {headers: this.getHeaders(token)});
+    return this.http.get<EmailResponse>(`${this.URL}/${emailId}`, {headers: this.getHeaders(token)});
   }
 
   buscarTodos(token: string): Observable<EmailListaResponse> {

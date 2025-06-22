@@ -28,7 +28,7 @@
 
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="status" class="w-1rem"></th>
+          <th pSortableColumn="status" class="w-1rem">Status</th>
           <th pSortableColumn="emailRemetente">Remetente <p-sortIcon field="emailRemetente"></p-sortIcon></th>
           <th pSortableColumn="assunto">Assunto <p-sortIcon field="assunto"></p-sortIcon></th>
           <th class="w-10rem text-center">Ações</th>
@@ -37,8 +37,8 @@
 
       <ng-template pTemplate="body" let-email>
         <tr [class.font-bold]="email.status === 'ENVIADO'">
-          <td class="text-center">
-            <i class="pi" [ngClass]="{'pi-envelope': email.status === 'ENVIADO', 'pi-envelope-open': email.status === 'LIDO'}"></i>
+          <td>
+            {{ email.status}}
           </td>
           <td>{{ email.emailRemetente }}</td>
           <td>{{ email.assunto }}</td>

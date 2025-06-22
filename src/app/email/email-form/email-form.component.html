@@ -36,7 +36,7 @@
     <div class="flex flex-column gap-2">
       <label for="corpo">Corpo do E-mail</label>
       <p-editor
-        [(ngModel)]="form.corpo"
+        #editorElement [(ngModel)]="form.corpo"
         name="corpo"
         [style]="{'height':'320px'}"
         required>

@@ -9,6 +9,13 @@ export const EMAIL_ROUTES: Routes = [
   {path: '', component: EmailListComponent},
   {path: 'novo', component: EmailFormComponent},
   {
+    path: 'responder/:id', // Nova rota para responder, passando o ID do e-mail
+    component: EmailFormComponent,
+    resolve: {
+      emailParaPreencher: EmailResolver // Usa o EmailResolver para carregar o e-mail
+    }
+  },
+  {
     path: 'enviar-rascunho/:id',
     component: EmailFormComponent,
     resolve: {

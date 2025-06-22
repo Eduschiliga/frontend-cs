@@ -32,7 +32,7 @@ export class RascunhoService {
   }
 
   public atualizar(rascunho: Rascunho, token: string): Observable<RascunhoResponse> {
-    return this.http.put<RascunhoResponse>(this.URL, rascunho, { headers: this.getHeaders(token) });
+    return this.http.put<RascunhoResponse>(this.URL + "/" + rascunho.rascunhoId, rascunho, { headers: this.getHeaders(token) });
   }
 
   public deletar(id: number, token: string): Observable<MensagemSucesso> {
