@@ -25,6 +25,11 @@ export class EmailViewComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.email = data['email'];
+
+
+      if (this.email?.corpo != null || this.email?.corpo != undefined) {
+        this.email.corpo = '<p>' + this.email?.corpo + '</p>'
+      }
     });
   }
 

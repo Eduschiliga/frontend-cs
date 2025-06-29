@@ -7,6 +7,15 @@
     </div>
     <div class="p-toolbar-group-right">
       <p-button
+        pTooltip="Recarregar"
+        tooltipPosition="bottom"
+        type="button"
+        icon="pi pi-refresh"
+        styleClass="p-button-outlined mr-2"
+        (click)="carregarEmails()">
+      </p-button>
+
+      <p-button
         type="button"
         label="Novo E-mail"
         icon="pi pi-plus"
@@ -53,7 +62,6 @@
             </p-button>
 
             <p-button
-              *ngIf="email.emailRemetente !== usuario.email"
               pTooltip="Responder"
               tooltipPosition="top"
               type="button"

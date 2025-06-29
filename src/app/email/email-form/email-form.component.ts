@@ -24,15 +24,14 @@ import { map, switchMap, take } from 'rxjs/operators';
   styleUrls: ['./email-form.component.css'],
   providers: [MessageService]
 })
-export class EmailFormComponent implements OnInit, AfterViewInit { // Implementar AfterViewInit
+export class EmailFormComponent implements OnInit, AfterViewInit {
   form: EmailCriacao = { emailDestinatario: '', assunto: '', corpo: '' };
   isFromDraft = false;
   draftId: number | null = null;
   usuario: UsuarioAuth = buildUsuarioAuth();
   tituloPagina = 'Novo E-mail';
 
-  @ViewChild('editorElement') editorElement!: ElementRef; // Adicionar ViewChild para o editor
-
+  @ViewChild('editorElement') editorElement!: ElementRef;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -59,16 +58,9 @@ export class EmailFormComponent implements OnInit, AfterViewInit { // Implementa
     });
   }
 
-  // Novo lifecycle hook para verificar após a renderização da view
   ngAfterViewInit(): void {
-    // Adicionar um pequeno atraso para garantir que o Quill esteja totalmente inicializado
     setTimeout(() => {
-      if (this.editorElement && this.editorElement.nativeElement) {
-        console.log('Conteúdo atual do p-editor (via innerHTML):', this.editorElement.nativeElement.querySelector('.ql-editor')?.innerHTML);
-      } else {
-        console.log('Elemento p-editor não encontrado no AfterViewInit.');
-      }
-    }, 500); // 500ms de atraso
+    }, 500);
   }
 
   private preencherParaResposta(email: Email): void {
@@ -77,7 +69,7 @@ export class EmailFormComponent implements OnInit, AfterViewInit { // Implementa
     this.form.assunto = `Re: ${email.assunto}`;
 
     const dataFormatada = email.dataEnvio
-      ? formatDate(email.dataEnvio, "dd/MM/yyyy 'às' HH:mm", 'pt-BR')
+      ? formatDate(email.dataEnvio, "dd/MM/yyyy", 'pt-BR')
       : 'data desconhecida';
 
     const cabecalhoResposta = `
@@ -90,29 +82,9 @@ export class EmailFormComponent implements OnInit, AfterViewInit { // Implementa
       <br>
     `;
 
-    // Garante que email.corpo seja uma string para manipulação segura
-    const corpoOriginalBruto = email.corpo || '';
+    const corpoOriginalBruto = "<p>" + email.corpo + "</p>" || '';
 
-    // Teste 1: Console.log do conteúdo bruto e do conteúdo a ser setado
-    console.log('DEBUG - Conteúdo original do e-mail (email.corpo):', corpoOriginalBruto);
-    console.log('DEBUG - Tipo de email.corpo:', typeof corpoOriginalBruto);
-
-
-    // --- TESTE 1: Inserir um texto simples para ver se o editor funciona ---
-    // this.form.corpo = "<div>Este é um teste simples. Se você vir isso, o editor está funcionando.</div>";
-
-    // --- TESTE 2: Conteúdo com o cabeçalho e corpo original (sem o blockquote para isolar) ---
-    // Mantenha esta linha COMENTADA para fazer o TESTE 1 primeiro.
-    // Se o TESTE 1 funcionar, DESCOMENTE ESTA LINHA e COMENTE O TESTE 1.
-    this.form.corpo = `${cabecalhoResposta}${corpoOriginalBruto}`; // <-- Esta é a linha da última tentativa.
-
-    // --- TESTE 3: Voltar com o blockquote se o TESTE 2 funcionar e o problema for a formatação.
-    // Se o TESTE 2 funcionar, e o problema for a formatação, DESCOMENTE ABAIXO e COMENTE AS LINHAS DE TESTE ANTERIORES.
-    // const corpoComBlockquote = `<blockquote style="border-left: 2px solid #ccc; margin-left: 10px; padding-left: 10px;">${corpoOriginalBruto}</blockquote>`;
-    // this.form.corpo = `${cabecalhoResposta}${corpoComBlockquote}`;
-
-    console.log('DEBUG - Conteúdo FINAL a ser setado no editor (this.form.corpo):', this.form.corpo);
-
+    this.form.corpo = `${cabecalhoResposta}${corpoOriginalBruto}`;
   }
 
   private preencherDeRascunho(rascunho: Rascunho): void {
@@ -124,7 +96,6 @@ export class EmailFormComponent implements OnInit, AfterViewInit { // Implementa
       assunto: rascunho.assunto || '',
       corpo: rascunho.corpo || ''
     };
-    console.log('DEBUG - Conteúdo do rascunho (rascunho.corpo):', rascunho.corpo);
   }
 
   enviar(): void {
