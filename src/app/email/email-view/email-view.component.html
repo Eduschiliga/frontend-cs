@@ -18,7 +18,7 @@
         Para: {{ email.emailDestinatario }}
       </ng-template>
       <ng-template pTemplate="content">
-        <div class="email-body-content" [innerHTML]="email.corpo"></div>
+        <div class="email-body-content">{{ email.corpo }}</div>
       </ng-template>
     </p-card>
   </div>

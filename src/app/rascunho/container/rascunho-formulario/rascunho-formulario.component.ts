@@ -4,11 +4,10 @@ import {MessageService} from 'primeng/api';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 
-// PrimeNG Modules
 import {CardModule} from 'primeng/card';
 import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
-import {EditorModule} from 'primeng/editor';
+import {InputTextareaModule} from 'primeng/inputtextarea'; // Adicionado
 import {ToastModule} from 'primeng/toast';
 import {ToolbarModule} from 'primeng/toolbar';
 import {Rascunho} from '../../model/rascunho.model';
@@ -25,7 +24,7 @@ import {AuthStateService} from '../../../auth/service/state/auth.state.service';
     CardModule,
     ButtonModule,
     InputTextModule,
-    EditorModule,
+    InputTextareaModule,
     ToastModule,
     ToolbarModule
   ],
@@ -49,7 +48,6 @@ export class RascunhoFormularioComponent implements OnInit {
 
   ngOnInit(): void {
     this.authState.usuario.subscribe(user => this.usuario = user);
-    // Pega os dados pre-carregados pelo resolver
     this.route.data.subscribe(data => {
       this.form = data['rascunho'];
       if (this.form && this.form.rascunhoId) {
@@ -58,12 +56,15 @@ export class RascunhoFormularioComponent implements OnInit {
     });
   }
 
+  // A função converterHtmlParaTexto foi removida pois não é mais necessária.
+
   salvar(): void {
     if (!this.usuario.token) {
       this.messageService.add({severity: 'error', summary: 'Erro', detail: 'Sessão inválida. Faça login novamente.'});
       return;
     }
 
+    // O payload agora usa o this.form diretamente, pois o corpo já é texto puro.
     const action = this.isEditMode
       ? this.rascunhoService.atualizar(this.form, this.usuario.token)
       : this.rascunhoService.criar(this.form, this.usuario.token);
