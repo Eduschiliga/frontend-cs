@@ -64,13 +64,15 @@ export class EmailFormComponent implements OnInit {
     this.form.assunto = `Re: ${email.assunto}`;
 
     const dataFormatada = email.dataEnvio
-      ? formatDate(email.dataEnvio, "dd/MM/yyyy", 'pt-BR')
+      ? email.dataEnvio
       : 'data desconhecida';
 
     const cabecalhoResposta = `\n\n---------- Mensagem Original ----------\nDe: ${email.emailRemetente || 'Desconhecido'}\nPara: ${email.emailDestinatario || 'Desconhecido'}\nAssunto: ${email.assunto || 'Sem Assunto'}\nData: ${dataFormatada}\n---------------------------------------\n\n`;
 
     const corpoOriginal = email.corpo || '';
+    console.log(corpoOriginal);
     this.form.corpo = `${cabecalhoResposta}${corpoOriginal}`;
+    console.log(this.form.corpo)
   }
 
   private preencherDeRascunho(rascunho: Rascunho): void {
